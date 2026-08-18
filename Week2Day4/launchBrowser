@@ -1,0 +1,22 @@
+import { test, expect, chromium, firefox } from "@playwright/test";
+
+test("Redbus title using Edge browser", async()=>{
+ const browser = await chromium.launch({channel: "msedge"})
+ const context = await browser.newContext()
+ const page = await context.newPage()
+ await page.goto("https://www.redbus.in/")
+
+ console.log("Redbus page title is: ",await page.title())
+ console.log("Redbus Page URL is: ", await page.url())
+})
+
+test("FlipKart page title using Firefox Browser", async()=>{
+    const browser1 = await firefox.launch()
+    const context1 = await browser1.newContext()
+    const page1 = await context1.newPage()
+    await page1.goto("https://www.flipkart.com/")
+    let pageTitle1= await page1.title()
+    let pageURL = await page1.url()
+    console.log("Flipkart page title is: ", pageTitle1)
+    console.log("Flipkart page URL is: ", pageURL) 
+})

@@ -7,9 +7,7 @@ test("Create a Lead using CSS Selectors", async ({ page }) => {
   const password = page.locator("input[name='PASSWORD']");
   const loginButton = page.locator("#login > p:nth-child(3) > input");
   const crmButton = page.locator("#label > a");
-  const createLead = page.locator(
-    "#left-content-column > div.frameSection > div.frameSectionBody > ul > li:nth-child(1) > a",
-  );
+  const createLead = page.locator( "#left-content-column > div.frameSection > div.frameSectionBody > ul > li:nth-child(1) > a");
   const companyName = page.locator("#createLeadForm_companyName");
   const firstName = page.locator('input[name = "firstName"]');
   const lastName = page.locator("td>input");

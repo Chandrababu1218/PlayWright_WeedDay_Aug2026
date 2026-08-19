@@ -29,23 +29,23 @@ import Javascript from "@playwright/test";
 test("Validating Country Dropdown", async ({ page }) => {
   await page.goto("https://leafground.com/select.xhtml");
 
-  const selectTool = '[class="ui-selectonemenu"]';
-  const selectCountry = ".ui-selectonemenu-label.ui-inputfield.ui-corner-all";
-  const selectState = ".ui-selectonemenu-label.ui-inputfield.ui-corner-all";
-  const chooseCourse = '//*[@id="j_idt87:auto-complete"]/ul/li/input';
+  const selectTool = page.locator('[class="ui-selectonemenu"]');
+  const selectCountry = page.locator(".ui-selectonemenu-label.ui-inputfield.ui-corner-all");
+  const selectState = page.locator(".ui-selectonemenu-label.ui-inputfield.ui-corner-all");
+  const chooseCourse = page.locator('//*[@id="j_idt87:auto-complete"]/ul/li/input');
 
-  await page.locator(selectTool).selectOption("Playwright");
+  await selectTool.selectOption("Playwright");
   await page.waitForTimeout(2000);
 
-  await page.locator(selectCountry).nth(0).click();
+  await selectCountry.nth(0).click();
   await page.locator('[data-label="India"]').click();
   await page.waitForTimeout(2000);
 
-  await page.locator(selectState).nth(1).click();
+  await selectState.nth(1).click();
   await page.locator('[data-label="Bengaluru"]').click();
   await page.waitForTimeout(2000);
 
-  await page.locator(chooseCourse).fill("Playwright");
+  await chooseCourse.fill("Playwright");
 
   const automationToolDropDown = page.locator('[class="ui-selectonemenu"]>option');
   const automationToolDropDownValues = await automationToolDropDown.count();
@@ -55,7 +55,7 @@ test("Validating Country Dropdown", async ({ page }) => {
     console.log(await automationToolDropDown.nth(index).innerText());
   }
 
-  const countryDropdown = page.locator(selectCountry);
+  const countryDropdown = selectCountry;
   const countryDropdownValues = await countryDropdown.count();
   console.log("Dropdown values of country are ", countryDropdownValues);
 });

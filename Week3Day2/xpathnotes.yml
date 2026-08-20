@@ -1,0 +1,329 @@
+Session Agenda for Week3 Day2 : Custom Dropdown and Xpath
+
+1. Recap                               
+2. Custom Dropdown                         
+3. Absolute and Relative Xpath                       
+4. Basic Xpaths                         
+5. Advanced Xpaths                          
+6. Breakout                            
+
+Custom / Dynamic Dropdown 
+-------------------------
+
+Handling Custom Dropdowns with click action (Built with <div>,<li <ul>)
+
+div-division
+li->list
+ul-> unordered list
+
+Example:
+<div class="dropdown">
+  <div class="option">India</div>
+  <div class="option">USA</div>
+  <div class="option">UK</div>
+</div>
+
+//open the dropdown
+await page.locator('.dropdown').click();
+
+//select the desired option
+await page.locator('.option', { hasText: 'USA' }).click();
+
+| Dropdown Type     | HTML Tag                | Playwright Method |
+| ----------------- | ----------------------- | ----------------- |
+| Standard Dropdown | `<select>`              | `selectOption()`  |
+| Custom Dropdown   | `<div>`, `<ul>`, `<li>` | `click()`         |
+
+
+Basic Xpath:
+-----------
+
+XPath (XML Path) is used to locate elements in the DOM using a path-like syntax.
+It acts like an address to identify elements when ID, name, or class is not reliable.
+
+Types of Xpath
+--------------
+
+1) Absolute xpath
+------------------
+
+Absolute XPath is an XPath that starts from the root of the HTML document and follows the
+full path to reach an element.
+
+<html>
+  <body>
+    <div>
+      <form>
+        <input type="text" id="username">
+      </form>
+    </div>
+  </body>
+</html>
+
+Absolute xpath: 
+
+/html/body/div/form/input
+
+Characteristics : 
+-----------------
+
+Starts with single slash /
+Begins from root element
+Contains the complete DOM path
+
+Disadvantages:
+-------------
+
+A small change in the webpage structure can break the locator.
+
+ex: If a new <div> is added:
+<body>
+  <div></div>
+  <div>
+
+Your XPath becomes invalid.
+
+In frameworks like Playwright and Selenium, absolute XPath is generally not recommended
+because it is brittle and hard to maintain.
+
+
+2) Relative xpath
+-----------------
+
+Relative XPath is a way to locate elements starting from anywhere in the DOM, not necessarily 
+from the root.
+
+Element is identified without using full DOM path and locator will be stable.
+
+Characteristics : 
+-----------------
+
+Starts with double slash //
+flexible, readable, and preferred over absolute XPath
+Less brittle (wont break easily if UI changes)
+Short and easy to maintain
+can use attribute and text
+
+Disadvantages
+-------------
+
+May match multiple elements (with wrong syntax)
+Slightly slower than CSS selectors (performance)
+
+> Basic relative xpath
+----------------------
+
+1) Attribute based Xpath : uses the attribute and attribute value of the WebElement in the
+DOM.
+
+Syntax:
+//tagName[@attribute='attributeValue']
+Example
+//input[@id='username']
+
+
+2) Text based Xpath: based on the text displayed for the WebElement in dom
+
+Syntax:
+//tagName[text()='text value in DOM']
+Example:
+//a[text()='Create New Account']
+
+3) Partial attribute based Xpath : uses the partial attribute value of the WebElement.
+
+Syntax:
+//tagName[contains(@attribute, 'Partial value of the attribute')]
+Example:
+//input[contains(@id,'user')]
+
+4) Partial text based Xpath: uses the partial text value of the WebElement.
+
+Syntax:
+//tagname[contains(text(),' Partial text in my DOM')]
+Example:
+//a[contains(text(),'Create')]
+
+5) Collection Based Xpath: when there is multiple matches for xpath, uses index to match 
+the exact element, index starts from 1.
+
+Syntax:
+(//tagName[@attribute='attributeValue'])[index]
+Example
+(//input[@class='inputLogin'])[2]
+
+> Advancd Relative Xpath/ Xpath Axes:
+-------------------------------------
+XPath allows both forward and reverse navigation in the DOM. Reverse navigation is done
+using axes like parent, ancestor, and preceding.
+
+if the index is beyond 5 matches, we go with Advanced relative xpaths.
+
+> parent to child
+> Grandparent to Grandchild
+> child to parent
+> Grandchild to Grandparent
+> ElderSibling and YoungerSibling
+> YoungerSibling to ElderSibling
+> Eldercousin to Youngercousin
+> Youngercousin to Eldercousin
+
+| Type       | XPath Axis     | Direction |
+| ---------- | -------------- | --------- |
+| Child      | `child::`      | Down      |
+| Descendant | `descendant::` | Down      |
+| Parent     | `parent::`     | Up        |
+| Ancestor   | `ancestor::`   | Up        |
+| Following  | `following::`  | Forward   |
+| Preceding  | `preceding::`  | Backward  |
+
+
+| Feature     | Absolute XPath | Relative XPath |
+| ----------- | -------------- | -------------- |
+| Start point | Root (`/html`) | Anywhere       |
+| Symbol      | `/`            | `//`           |
+| Stability   | Not stable     | More stable    |
+| Usage       | Rare           | Mostly used    |
+
+Parent-child : Xpath pattern based on parent/Grand parent to child relationships
+-------------
+
+1) Parent to child
+Syntax:
+( parent realtive xpath)/(tagName of child)
+EX: //form[@id='login']/p
+
+2) Grand Parent to Grand child
+Syntax: 
+GrandParent relative xpath//tagName of grand child
+Ex: (//form[@id='login']//label)
+
+3) Child to parent
+Syntax:
+Child relative xpath/parent::parent tagName
+Ex: //input[@id='username']/parent::p
+
+4) Grand child to Grand Parent
+Syntax:
+GrandChild relative xpath/ancestor::tagName of grand parent
+Ex: //input[@id='password']/ancestor::form
+
+
+Axes:  Xpath pattern based on Sibling and Cousin relationship
+-----
+
+5) Elder Sibling to younger Sibling
+Syntax:
+(Elder sibling relative xpath)/following-sibling::tagName of younger sibling
+Ex: //label[text()='Username']/following-sibling::input 
+
+6) Younger Sibling to Elder Sibling
+Syntax:
+Younger sibling relative xpath/preceding-sibling::tagName of Elder sibling
+Ex: //input[@id='username']/preceding-sibling::label
+
+7) Elder Cousin to Younger Cousin
+Syntax:
+Elder cousing relative xpath/following::tagName of younger Cousin
+Ex: //input[@id='username']/following::label
+
+
+8) Younger Cousin to Elder Cousin
+Syntax:
+Younger cousin xpath/preceding::tagName of Elder cousin
+Ex: //label[text()='Password']/preceding::input
+
+Classroom Activity:
+-------------------
+Write the typescript code to login to Salesforce application using Advanced Xpaths.
+
+https://login.salesforce.com/?locale=in
+Sample credentials :
+Username:dilipkumar.rajendran@testleaf.com
+Password: TestLeaf@2025
+
+https://login.salesforce.com/
+
+others:
+-------
+
+1) LAST CHILD
+syntax:
+-------
+(xpath of parent)/child-tagName[last()]
+
+<div>
+    <input id="user">
+    <input id="password">
+    <input id="email">
+</div>
+
+ex: Xpath
+//div/child::input[last()]    //o/p-> <input id="email">
+
+2) USING ITEM INDEX
+syntax:
+------- 
+(xpath)[index]
+
+ex: (//input[@type='text'])[2]    //o/p-> Returns the 2nd matching input.
+
+3) USING CHILD ITEM INDEX
+syntax:
+-------
+(parent-xpath)/child::tagName[index]
+
+ex: //form/child::input[3]
+
+4) LAST CHILD
+
+syntax:
+(xpath of parent)/child::tagName[last()]
+ex:
+//form/child::input[last()]
+
+5) LAST BUT ONE CHILD
+
+syntax:
+(xpath of parent)/child::tagName[last()-1]
+ex:
+//form/child::input[last()-1]   //Returns the second-last child.
+
+6) FIRST CHILD
+
+syntax:
+(xpath of parent)/child::tagName[1]
+ex:
+//form/child::input[1]   //Returns the first child.
+
+7) USING CHILD ITEM INDEX
+
+(parent-xpath)/child-tagName[index]
+ex: (parent-xpath)/child::tagName[index]
+
+8) Using And condition
+syntax:
+//tagName[@att1='v1' and @att2='v2']
+
+9)USING OR CONDITION
+syntax:
+//tagName[@att1='v1' or @att2='v2']
+
+10) Using contains()
+
+syntax: //tagName[contains(@attribute,'value')]
+Ex: //input[contains(@id,'user')]
+
+11) USING STARTS-WITH
+
+syntax: //tagName[starts-with(@attribute,'value')]
+ex: //input[starts-with(@id,'user')]
+
+12) Using text
+syntax: //tagName[text()='Exact Text']
+
+ex: //button[text()='Login']
+
+13) Normalize space
+
+syntax:
+//button[normalize-space()='Login'] //Works even if there are extra spaces/new lines.
